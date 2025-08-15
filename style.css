@@ -5,6 +5,8 @@ const cardArray = [
 { name: 'cachorro', img: 'imagens/cachorro.png' }
 { name: 'coelho', img: 'imagens/coelho.png' },
 { name: 'coelho', img: 'imagens/coelho.png' }
+{ name: 'lobo', img: 'imagens/lobo.png' },
+{ name: 'lobo', img: 'imagens/lobo.png' }
 
 ];
 const grid = document.getElementById('grid');
