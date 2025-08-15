@@ -1,62 +1,62 @@
-body {
-display: flex;
-flex-direction: column;
-align-items: center;
-font-family: Arial, sans-serif;
-margin: 0;
-padding: 20px;
-background-color: #f5f5f5;
-}
-h1 {
-margin-bottom: 20px;
-}
-.grid {
-display: grid;
-grid-template-columns: repeat(4, 100px);
-gap: 10px;
-}
-.card {
-position: relative;
-width: 100px;
-height: 100px;
-cursor: pointer;
-transform-style: preserve-3d;
-transition: transform 0.5s;
-border-radius: 8px;
+const cardArray = [
+{ name: 'gato', img: 'imagens/gato.jpeg' },
+{ name: 'gato', img: 'imagens/gato.jpeg' },
+{ name: 'cachorro', img: 'imagens/cachorro.jpeg' },
+{ name: 'cachorro', img: 'imagens/cachorro.jpeg' }
+{ name: 'coelho', img: 'imagens/coelho.jpeg' },
+{ name: 'coelho', img: 'imagens/coelho.jpeg' }
+{ name: 'lobo', img: 'imagens/lobo.jpeg' },
+{ name: 'lobo', img: 'imagens/lobo.jpeg' }
 
-box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+];
+const grid = document.getElementById('grid');
+let cardsChosen = [], cardsChosenId = [], cardsWon = [];
+// Embaralha as cartas
+cardArray.sort(() => 0.5 - Math.random());
+function createBoard() {
+cardArray.forEach((card, index) => {
+const cardElement = document.createElement('div');
+cardElement.classList.add('card');
+
+cardElement.setAttribute('data-id', index);
+cardElement.addEventListener('click', flipCard);
+const front = document.createElement('div');
+front.classList.add('front');
+const back = document.createElement('div');
+back.classList.add('back');
+cardElement.append(front, back);
+grid.appendChild(cardElement);
+});
 }
-.card.flip {
-transform: perspective(600px) rotateY(180deg);
+function flipCard() {
+const id = this.getAttribute('data-id');
+cardsChosen.push(cardArray[id].name);
+cardsChosenId.push(id);
+this.classList.add('flip');
+this.querySelector('.back').innerHTML =
+`<img src="${cardArray[id].img}" alt="${cardArray[id].name}">`;
+if (cardsChosen.length === 2) {
+setTimeout(checkForMatch, 500);
 }
-.card .front {
-position: absolute;
-width: 100%;
-height: 100%;
-backface-visibility: hidden;
-border-radius: 8px;
-background-color: #2e3d49;
-top: 0;
-left: 0;
 }
-.card .back {
-position: absolute;
-width: 100%;
-height: 100%;
-backface-visibility: hidden;
-border-radius: 8px;
-background-color: #f0f0f0;
-transform: rotateY(180deg);
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 5px;
-top: 0;
-left: 0;
+function checkForMatch() {
+const cards = document.querySelectorAll('.card');
+const [firstId, secondId] = cardsChosenId;
+if (cardsChosen[0] === cardsChosen[1]) {
+cards[firstId].removeEventListener('click', flipCard);
+cards[secondId].removeEventListener('click', flipCard);
+cardsWon.push(cardsChosen);
+} else {
+cards[firstId].classList.remove('flip');
+cards[secondId].classList.remove('flip');
+cards[firstId].querySelector('.back').innerHTML = '';
+cards[secondId].querySelector('.back').innerHTML = '';
 }
-.card .back img {
-max-width: 90%;
-max-height: 90%;
-object-fit: contain;
-display: block;
+cardsChosen = [];
+cardsChosenId = [];
+if (cardsWon.length === cardArray.length / 2) {
+alert('Parabéns! Todos os pares encontrados!');
 }
+}
+// Inicializa o tabuleiro
+createBoard();
